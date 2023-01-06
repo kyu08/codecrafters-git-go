@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 )
@@ -47,14 +46,13 @@ func main() {
 			}
 
 			// ファイル内容をcompress/zlibを使って解凍する
-			if err = unzipLines(b); err != nil {
+			result, err := unzipLines(b)
+			if err != nil {
 				fmt.Printf("unzipLines failed: %s", err)
 				os.Exit(1)
-
 			}
 
-			// ファイル内容を標準出力に出力する
-			// fmt.Printf(unzippedLines)
+			fmt.Printf(*result)
 		}
 
 	default:
@@ -80,18 +78,17 @@ func blobHashToFilePath(hash string) *string {
 	return &path
 }
 
-func unzipLines(b []byte) error {
+func unzipLines(b []byte) (*string, error) {
 	b2 := bytes.NewReader(b)
 	r, err := zlib.NewReader(b2)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	fmt.Println("==========")
-	io.Copy(os.Stdout, r)
-	fmt.Println("==========")
+	buf := make([]byte, 1024)
+	_, err = r.Read(buf)
+	// io.Copy(os.Stdout, r)
 
-	// TODO: string, errを返すようにする
-	// return string(b)
-	return nil
+	str := string(buf)
+	return &str, nil
 }
