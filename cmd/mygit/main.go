@@ -16,7 +16,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch command, opt := os.Args[1], os.Args[2]; command {
+	switch command, opt := os.Args[1], getOpt(os.Args); command {
 	case "init":
 		for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 			// MEMO: 0755: rwxr-xr-x
@@ -33,7 +33,7 @@ func main() {
 		fmt.Println("Initialized git directory")
 
 	case "cat-file":
-		switch opt {
+		switch *opt {
 		case "-p":
 			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握
 			fmt.Println("-p")
@@ -43,4 +43,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Unknown command %s\n", command)
 		os.Exit(1)
 	}
+}
+
+func getOpt(args []string) *string {
+	if len(args) > 2 {
+		return &args[2]
+	}
+
+	return nil
 }
