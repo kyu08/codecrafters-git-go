@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"golang.org/x/text/cases"
 )
 
 // Usage: your_git.sh <command> <arg1> <arg2> ...
@@ -16,9 +18,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch command := os.Args[1]; command {
+	switch command, opt := os.Args[1], os.Args[2]; command {
 	case "init":
 		for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
+			// MEMO: 0755: rwxr-xr-x
 			if err := os.MkdirAll(dir, 0755); err != nil {
 				fmt.Fprintf(os.Stderr, "Error creating directory: %s\n", err)
 			}
@@ -30,6 +33,13 @@ func main() {
 		}
 
 		fmt.Println("Initialized git directory")
+
+	case "cat-file":
+		switch opt {
+		case "-p":
+			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握する
+			fmt.Println("-p")
+		}
 
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command %s\n", command)
