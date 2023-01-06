@@ -37,7 +37,7 @@ func main() {
 		case "-p":
 			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握
 			fmt.Println("-p")
-			fmt.Printf("optValue: %v\n", optValue)
+			fmt.Printf("optValue: %v\n", *optValue)
 		}
 
 	default:
