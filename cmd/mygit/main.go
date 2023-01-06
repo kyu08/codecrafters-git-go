@@ -45,10 +45,10 @@ func main() {
 			lines := string(b)
 
 			// ファイル内容をcompress/zlibを使って解凍する
-			unzipedLines := unzipLines(lines)
+			unzippedLines := unzipLines(lines)
 
 			// ファイル内容を標準出力に出力する
-			fmt.Printf("lines: %v\n", unzipedLines)
+			fmt.Printf(unzippedLines)
 		}
 
 	default:
