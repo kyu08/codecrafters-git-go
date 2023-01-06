@@ -76,5 +76,5 @@ func blobHashToFilePath(hash string) *string {
 }
 
 func unzipLines(lines string) string {
-	return ""
+	return "TODO: implement unzipLines"
 }
