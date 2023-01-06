@@ -1,100 +1,29 @@
 package main
 
 import (
-	"bytes"
-	"compress/zlib"
-	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 )
 
-// Usage: your_git.sh <command> <arg1> <arg2> ...
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Fprintf(os.Stderr, "usage: mygit <command> [<args>...]\n")
 		os.Exit(1)
 	}
 
-	switch command, opt, optValue := os.Args[1], getElem(os.Args, 2), getElem(os.Args, 3); command {
+	command := os.Args[1]
+	opt := getElem(os.Args, 2)
+	optValue := getElem(os.Args, 3)
+
+	switch command {
 	case "init":
-		for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
-			// MEMO: 0755: rwxr-xr-x
-			if err := os.MkdirAll(dir, 0755); err != nil {
-				fmt.Fprintf(os.Stderr, "Error creating directory: %s\n", err)
-			}
-		}
-
-		headFileContents := []byte("ref: refs/heads/master\n")
-		if err := os.WriteFile(".git/HEAD", headFileContents, 0644); err != nil {
-			fmt.Fprintf(os.Stderr, "Error writing file: %s\n", err)
-		}
-
-		fmt.Println("Initialized git directory")
+		gitInit()
 
 	case "cat-file":
-		switch *opt {
-		case "-p":
-			// hashをファイルパスに変換する
-			blobHash := optValue
-			blobRelativePath, err := blobHashToFilePath(*blobHash)
-			if err != nil {
-				fmt.Printf("blobHashToFilePath failed: %s", err)
-				os.Exit(1)
-			}
-			filePath := ".git/objects/" + blobRelativePath
-
-			// ファイル内容を取得する
-			b, err := ioutil.ReadFile(filePath)
-			if err != nil {
-				fmt.Printf("ReadFile failed: %s", err)
-				os.Exit(1)
-			}
-
-			// ファイル内容をcompress/zlibを使って解凍する
-			result, err := unzipLines(b)
-			if err != nil {
-				fmt.Printf("unzipLines failed: %s", err)
-				os.Exit(1)
-			}
-
-			fmt.Printf(result)
-		}
+		catFile(opt, optValue)
 
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command %s\n", command)
 		os.Exit(1)
 	}
-}
-
-func getElem(args []string, index int64) *string {
-	if int64(len(args)) >= (index + 1) {
-		return &args[index]
-	}
-
-	return nil
-}
-
-func blobHashToFilePath(hash string) (string, error) {
-	if len(hash) < 3 {
-		return nil, errors.New("invalid hash")
-	}
-
-	path := hash[0:2] + "/" + hash[2:]
-	return &path, nil
-}
-
-func unzipLines(b []byte) (string, error) {
-	r, err := zlib.NewReader(bytes.NewReader(b))
-	if err != nil {
-		return "", err
-	}
-
-	buf, err := ioutil.ReadAll(r)
-	if err != nil {
-		return "", err
-	}
-
-	// `blob 38\x00yikes humpty doo humpty humpty vanilla`のように`blob 38\x00`が先頭に追加されてしまっている
-	return string(buf)[8:], nil
 }
