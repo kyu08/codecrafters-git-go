@@ -7,10 +7,6 @@ import (
 
 // Usage: your_git.sh <command> <arg1> <arg2> ...
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Println("Logs from your program will appear here!")
-
-	fmt.Printf("os.Args: %v\n", os.Args)
 	if len(os.Args) < 2 {
 		fmt.Fprintf(os.Stderr, "usage: mygit <command> [<args>...]\n")
 		os.Exit(1)
@@ -35,9 +31,11 @@ func main() {
 	case "cat-file":
 		switch *opt {
 		case "-p":
+			// 引数を元にファイルの中身を返す
+			// blob sha をファイルパスに変換する
+			// ファイル内容を標準出力に出力する
 			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握
-			fmt.Println("-p")
-			fmt.Printf("optValue: %v\n", *optValue)
+			fmt.Print("dumpty doo dumpty dumpty yikes donkey")
 		}
 
 	default:
