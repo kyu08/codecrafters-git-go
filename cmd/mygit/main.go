@@ -34,11 +34,10 @@ func main() {
 		case "-p":
 			// hashをファイルパスに変換する
 			blobHash := optValue
-			filePath := blobHashToFilePath(".git/" + *blobHash)
+			filePath := ".git/" + *blobHashToFilePath(*blobHash)
 
-			fmt.Printf("filePath: %v\n", *filePath)
 			// ファイル内容を取得する
-			b, err := ioutil.ReadFile(*filePath)
+			b, err := ioutil.ReadFile(filePath)
 			if err != nil {
 				fmt.Printf("ReadFile failed: %s", err)
 				os.Exit(1)
