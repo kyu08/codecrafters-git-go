@@ -18,10 +18,10 @@ func main() {
 	switch command {
 	case "init":
 		gitInit()
-
 	case "cat-file":
 		catFile(opt, optValue)
-
+	case "hash-object":
+		hashObject(opt, optValue)
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command %s\n", command)
 		os.Exit(1)
