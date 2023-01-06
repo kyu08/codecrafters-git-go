@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"compress/zlib"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -36,7 +37,12 @@ func main() {
 		case "-p":
 			// hashをファイルパスに変換する
 			blobHash := optValue
-			filePath := ".git/objects/" + *blobHashToFilePath(*blobHash)
+			blobRelativePath, err := blobHashToFilePath(*blobHash)
+			if err != nil {
+				fmt.Printf("blobHashToFilePath failed: %s", err)
+				os.Exit(1)
+			}
+			filePath := ".git/objects/" + blobRelativePath
 
 			// ファイル内容を取得する
 			b, err := ioutil.ReadFile(filePath)
@@ -52,7 +58,7 @@ func main() {
 				os.Exit(1)
 			}
 
-			fmt.Printf(*result)
+			fmt.Printf(result)
 		}
 
 	default:
@@ -69,24 +75,26 @@ func getElem(args []string, index int64) *string {
 	return nil
 }
 
-func blobHashToFilePath(hash string) *string {
+func blobHashToFilePath(hash string) (string, error) {
 	if len(hash) < 3 {
-		return nil
+		return nil, errors.New("invalid hash")
 	}
 
 	path := hash[0:2] + "/" + hash[2:]
-	return &path
+	return &path, nil
 }
 
-func unzipLines(b []byte) (*string, error) {
-	b2 := bytes.NewReader(b)
-	r, err := zlib.NewReader(b2)
+func unzipLines(b []byte) (string, error) {
+	r, err := zlib.NewReader(bytes.NewReader(b))
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	buf, err := ioutil.ReadAll(r)
+	if err != nil {
+		return "", err
+	}
 
-	str := string(buf)[8:]
-	return &str, nil
+	// `blob 38\x00yikes humpty doo humpty humpty vanilla`のように`blob 38\x00`が先頭に追加されてしまっている
+	return string(buf)[8:], nil
 }
