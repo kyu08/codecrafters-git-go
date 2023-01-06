@@ -37,7 +37,7 @@ func main() {
 	case "cat-file":
 		switch opt {
 		case "-p":
-			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握する
+			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握
 			fmt.Println("-p")
 		}
 
