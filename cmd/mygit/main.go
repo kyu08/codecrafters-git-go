@@ -87,6 +87,6 @@ func unzipLines(b []byte) (*string, error) {
 
 	buf, err := ioutil.ReadAll(r)
 
-	str := string(buf)
+	str := string(buf)[11:]
 	return &str, nil
 }
