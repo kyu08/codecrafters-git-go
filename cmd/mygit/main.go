@@ -85,9 +85,7 @@ func unzipLines(b []byte) (*string, error) {
 		return nil, err
 	}
 
-	buf := make([]byte, 0)
-	_, err = r.Read(buf)
-	// io.Copy(os.Stdout, r)
+	buf, err := ioutil.ReadAll(r)
 
 	str := string(buf)
 	return &str, nil
