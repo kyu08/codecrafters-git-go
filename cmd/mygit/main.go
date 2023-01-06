@@ -87,7 +87,9 @@ func unzipLines(b []byte) error {
 		return err
 	}
 
+	fmt.Println("==========")
 	io.Copy(os.Stdout, r)
+	fmt.Println("==========")
 
 	// TODO: string, errを返すようにする
 	// return string(b)
