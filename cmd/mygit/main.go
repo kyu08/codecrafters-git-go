@@ -12,7 +12,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch command, opt, optValue := os.Args[1], getElem(os.Args, 2), getElem(os.Args, 3); command {
+	switch command, opt, _ := os.Args[1], getElem(os.Args, 2), getElem(os.Args, 3); command {
 	case "init":
 		for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 			// MEMO: 0755: rwxr-xr-x
