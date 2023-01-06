@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-
-	"golang.org/x/text/cases"
 )
 
 // Usage: your_git.sh <command> <arg1> <arg2> ...
