@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 )
 
@@ -12,7 +13,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch command, opt, _ := os.Args[1], getElem(os.Args, 2), getElem(os.Args, 3); command {
+	switch command, opt, optValue := os.Args[1], getElem(os.Args, 2), getElem(os.Args, 3); command {
 	case "init":
 		for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 			// MEMO: 0755: rwxr-xr-x
@@ -31,11 +32,23 @@ func main() {
 	case "cat-file":
 		switch *opt {
 		case "-p":
-			// 引数を元にファイルの中身を返す
-			// blob sha をファイルパスに変換する
+			// hashをファイルパスに変換する
+			blobHash := optValue
+			filePath := blobHashToFilePath(*blobHash)
+
+			// ファイル内容を取得する
+			b, err := ioutil.ReadFile(*filePath)
+			if err != nil {
+				fmt.Printf("ReadFile failed: %s", err)
+				os.Exit(1)
+			}
+			lines := string(b)
+
+			// ファイル内容をcompress/zlibを使って解凍する
+			unzipedLines := unzipLines(lines)
+
 			// ファイル内容を標準出力に出力する
-			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握
-			fmt.Print("dumpty doo dumpty dumpty yikes donkey")
+			fmt.Printf("lines: %v\n", unzipedLines)
 		}
 
 	default:
@@ -44,10 +57,23 @@ func main() {
 	}
 }
 
-func getElem(args []string, index int) *string {
-	if len(args) > index {
+func getElem(args []string, index int64) *string {
+	if int64(len(args)) >= (index + 1) {
 		return &args[index]
 	}
 
 	return nil
+}
+
+func blobHashToFilePath(hash string) *string {
+	if len(hash) < 3 {
+		return nil
+	}
+
+	path := hash[0:2] + "/" + hash[2:]
+	return &path
+}
+
+func unzipLines(lines string) string {
+	return ""
 }
