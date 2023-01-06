@@ -16,7 +16,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch command, opt := os.Args[1], getOpt(os.Args); command {
+	switch command, opt, optValue := os.Args[1], getElem(os.Args, 2), getElem(os.Args, 3); command {
 	case "init":
 		for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 			// MEMO: 0755: rwxr-xr-x
@@ -37,6 +37,7 @@ func main() {
 		case "-p":
 			// TODO: テストケースとgit cat-fileの定義を読んで挙動を把握
 			fmt.Println("-p")
+			fmt.Printf("optValue: %v\n", optValue)
 		}
 
 	default:
@@ -45,9 +46,9 @@ func main() {
 	}
 }
 
-func getOpt(args []string) *string {
-	if len(args) > 2 {
-		return &args[2]
+func getElem(args []string, index int) *string {
+	if len(args) > index {
+		return &args[index]
 	}
 
 	return nil
