@@ -8,7 +8,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"strings"
 )
 
 func hashObject(opt, optValue *string) {
