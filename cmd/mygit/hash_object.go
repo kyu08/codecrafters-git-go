@@ -14,7 +14,8 @@ func hashObject(opt, optValue *string) {
 	switch *opt {
 	case "-w":
 		if optValue == nil {
-			panic("file name is empty")
+			fmt.Print("file name is empty")
+			os.Exit(1)
 		}
 
 		// TODO: hashString取得メソッドを別定義する
@@ -54,14 +55,16 @@ func someFunc1(sourceFilePath string) string {
 	zw.Close()
 
 	if _, err := io.Copy(zw, f); err != nil {
-		panic("io.Copy failed.")
+		fmt.Printf("io.Copy failed. err:%s", err)
+		os.Exit(1)
 	}
 
 	byte := buf.Bytes()
 
 	_, err = f.Write(byte)
 	if err != nil {
-		panic(err.Error())
+		fmt.Printf("f.Write failed. err:%s", err)
+		os.Exit(1)
 	}
 
 	return hash
