@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -58,7 +59,10 @@ func unzip(b []byte) (string, error) {
 	}
 
 	buf, err := ioutil.ReadAll(r)
-	if err != nil {
+  Unexpected EOFをどう対処するか
+  そもそもUnexpected EOFが出てきてることが問題なのか
+  うまくハンドリングできていないことが問題なのかを明確にするところから
+	if err != nil && err != io.ErrUnexpectedEOF {
 		return "", err
 	}
 
