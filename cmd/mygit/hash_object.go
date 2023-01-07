@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func hashObject(opt, optValue *string) {
@@ -42,11 +43,17 @@ func someFunc1(sourceFilePath string) string {
 	h.Write([]byte(store))
 	bs := h.Sum(nil)
 	hash := fmt.Sprintf("%x\n", bs)
+	dirName := hash[:2]
+	fileName := hash[2:]
 
 	// file contentの圧縮
-	blobFilePath := fmt.Sprintf(".git/objects/%s/%s", hash[:2], hash[2:])
+	blobFilePath := fmt.Sprintf(".git/objects/%s/%s", dirName, fileName)
 
-	// TODO: bを圧縮する
+	if err := os.Mkdir(dirName, 0777); err != nil {
+		fmt.Printf("os.Mkdir failed. err:%s", err)
+		os.Exit(1)
+	}
+
 	f, err := os.Create(blobFilePath)
 	if err != nil {
 		fmt.Printf("os.Create failed. err:%s", err)
