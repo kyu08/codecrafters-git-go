@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
+	"compress/zlib"
 	"crypto/sha1"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 )
@@ -14,36 +17,54 @@ func hashObject(opt, optValue *string) {
 			panic("file name is empty")
 		}
 
-		someFunc1(*optValue)
-		// someFunc2(sha)
+		// TODO: hashString取得メソッドを別定義する
+		hash := someFunc1(*optValue)
+		someFunc2(hash)
 	}
 }
 
 // someFunc1 データをblobとして.git/objectsに格納
-func someFunc1(filePath string) string {
-	// SHAの計算
+func someFunc1(sourceFilePath string) string {
 	// ファイル内容の取得
-	b, err := ioutil.ReadFile(filePath)
+	b, err := ioutil.ReadFile(sourceFilePath)
 	if err != nil {
 		fmt.Printf("ReadFile failed: %s\n", err)
 		os.Exit(1)
 	}
 
 	content := string(b)
-	header := fmt.Sprintf("blob %d\u0000", len(content))
+	header := fmt.Sprintf("blob %d\x00", len(content))
 	store := header + content
 
 	// sha1を計算
 	h := sha1.New()
 	h.Write([]byte(store))
 	bs := h.Sum(nil)
-	fmt.Printf("%x\n", bs)
+	hash := fmt.Sprintf("%x\n", bs)
 
 	// file contentの圧縮
-	// headerとcontentを連結したやつをzlibで圧縮して格納
-	fmt.Printf("store: %v\n", store)
-	sha := "sha"
-	return sha
+	blobFilePath := fmt.Sprintf(".git/objects/%s/%s", hash[:2], hash[2:])
+
+	// TODO: bを圧縮する
+	f, err := os.Create(blobFilePath)
+	defer f.Close()
+
+	buf := new(bytes.Buffer)
+	zw := zlib.NewWriter(buf)
+	zw.Close()
+
+	if _, err := io.Copy(zw, f); err != nil {
+		panic("io.Copy failed.")
+	}
+
+	byte := buf.Bytes()
+
+	_, err = f.Write(byte)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return hash
 }
 
 // someFunc2 SHAをstdoutに出力
