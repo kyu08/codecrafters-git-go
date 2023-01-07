@@ -48,6 +48,10 @@ func someFunc1(sourceFilePath string) string {
 
 	// TODO: bを圧縮する
 	f, err := os.Create(blobFilePath)
+	if err != nil {
+		fmt.Printf("os.Create failed. err:%s", err)
+		os.Exit(1)
+	}
 	defer f.Close()
 
 	buf := new(bytes.Buffer)
