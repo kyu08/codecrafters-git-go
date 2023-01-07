@@ -14,6 +14,10 @@ func catFile(opt, optValue *string) {
 	case "-p":
 		const hashLen = 40
 
+		if optValue == nil {
+			panic("optValue not given.")
+		}
+
 		// hashをファイルパスに変換
 		blobHash := *optValue
 		if len(blobHash) != hashLen {

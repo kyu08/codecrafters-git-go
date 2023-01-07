@@ -6,7 +6,6 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 )
 
@@ -27,21 +26,29 @@ func hashObject(opt, optValue *string) {
 // someFunc1 データをblobとして.git/objectsに格納
 func someFunc1(sourceFilePath string) string {
 	// ファイル内容の取得
-	b, err := ioutil.ReadFile(sourceFilePath)
+	sourceFile, err := os.Open(sourceFilePath)
+	defer sourceFile.Close()
 	if err != nil {
-		fmt.Printf("ReadFile failed: %s\n", err)
+		fmt.Printf("os.Open failed: %s\n", err)
 		os.Exit(1)
 	}
 
-	content := string(b)
-	header := fmt.Sprintf("blob %d\x00", len(content))
-	store := header + content
+	contentByte := make([]byte, 1024)
+	count, err := sourceFile.Read(contentByte)
+	if err != nil {
+		fmt.Printf("sourceFile.Read failed: %s\n", err)
+		os.Exit(1)
+	}
+
+	contentStr := string(contentByte[:count])
+	header := fmt.Sprintf("blob %d\x00", len(contentStr))
+	store := header + contentStr
 
 	// sha1を計算
 	h := sha1.New()
 	h.Write([]byte(store))
 	bs := h.Sum(nil)
-	hash := fmt.Sprintf("%x\n", bs)
+	hash := fmt.Sprintf("%x", bs)
 	dirName := hash[:2]
 	fileName := hash[2:]
 
@@ -55,25 +62,22 @@ func someFunc1(sourceFilePath string) string {
 	}
 
 	f, err := os.Create(blobFilePath)
+	defer f.Close()
 	if err != nil {
 		fmt.Printf("os.Create failed. err:%s", err)
 		os.Exit(1)
 	}
-	defer f.Close()
 
 	buf := new(bytes.Buffer)
 	zw := zlib.NewWriter(buf)
-	zw.Close()
+	defer zw.Close()
 
-	if _, err := io.Copy(zw, f); err != nil {
+	if _, err := io.Copy(zw, sourceFile); err != nil {
 		fmt.Printf("io.Copy failed. err:%s", err)
 		os.Exit(1)
 	}
 
-	byte := buf.Bytes()
-
-	_, err = f.Write(byte)
-	if err != nil {
+	if count, err = f.Write(buf.Bytes()); err != nil {
 		fmt.Printf("f.Write failed. err:%s", err)
 		os.Exit(1)
 	}
