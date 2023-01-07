@@ -46,10 +46,11 @@ func someFunc1(sourceFilePath string) string {
 	fileName := hash[2:]
 
 	// file contentの圧縮
-	blobFilePath := fmt.Sprintf(".git/objects/%s/%s", dirName, fileName)
+	dirPath := fmt.Sprintf(".git/objects/%s", dirName)
+	blobFilePath := fmt.Sprintf("%s/%s", dirPath, fileName)
 
-	if err := os.Mkdir(dirName, 0777); err != nil {
-		fmt.Printf("os.Mkdir failed. err:%s", err)
+	if err := os.MkdirAll(dirPath, 0777); err != nil {
+		fmt.Printf("os.MkdirAll failed. err:%s", err)
 		os.Exit(1)
 	}
 
