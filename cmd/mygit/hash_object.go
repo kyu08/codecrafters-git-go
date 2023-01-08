@@ -67,9 +67,9 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
-	var buf *bytes.Buffer
-	// var buf := new(bytes.Buffer)
-	zw := zlib.NewWriter(buf)
+	// buf := bytes.NewBuffer()
+	var buf bytes.Buffer
+	zw := zlib.NewWriter(&buf)
 	defer zw.Close()
 
 	if _, err = zw.Write(contentByte); err != nil {
