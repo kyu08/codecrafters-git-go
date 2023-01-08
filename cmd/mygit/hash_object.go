@@ -67,12 +67,11 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
-	// buf := bytes.NewBuffer()
 	var buf bytes.Buffer
 	zw := zlib.NewWriter(&buf)
 	defer zw.Close()
 
-	if _, err = zw.Write(contentByte); err != nil {
+	if _, err = zw.Write(contentByte[:count]); err != nil {
 		fmt.Printf("zw.Write failed. err:%s", err)
 		os.Exit(1)
 	}
