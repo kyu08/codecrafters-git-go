@@ -59,9 +59,6 @@ func unzip(b []byte) (string, error) {
 	}
 
 	buf, err := ioutil.ReadAll(r)
-  Unexpected EOFをどう対処するか
-  そもそもUnexpected EOFが出てきてることが問題なのか
-  うまくハンドリングできていないことが問題なのかを明確にするところから
 	if err != nil && err != io.ErrUnexpectedEOF {
 		return "", err
 	}

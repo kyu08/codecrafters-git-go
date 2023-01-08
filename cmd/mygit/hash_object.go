@@ -5,7 +5,6 @@ import (
 	"compress/zlib"
 	"crypto/sha1"
 	"fmt"
-	"io"
 	"os"
 )
 
@@ -33,7 +32,7 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
-	contentByte := make([]byte, 1024)
+	contentByte := make([]byte, 0)
 	count, err := sourceFile.Read(contentByte)
 	if err != nil {
 		fmt.Printf("sourceFile.Read failed: %s\n", err)
@@ -72,11 +71,12 @@ func someFunc1(sourceFilePath string) string {
 	zw := zlib.NewWriter(buf)
 	defer zw.Close()
 
-	if _, err := io.Copy(zw, sourceFile); err != nil {
-		fmt.Printf("io.Copy failed. err:%s", err)
+	if _, err = zw.Write(contentByte); err != nil {
+		fmt.Printf("zw.Write failed. err:%s", err)
 		os.Exit(1)
 	}
 
+	// ↑と↓まとめれたりする？
 	if count, err = f.Write(buf.Bytes()); err != nil {
 		fmt.Printf("f.Write failed. err:%s", err)
 		os.Exit(1)
