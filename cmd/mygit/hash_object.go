@@ -32,7 +32,7 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
-	contentByte := make([]byte, 0)
+	contentByte := make([]byte, 1024)
 	count, err := sourceFile.Read(contentByte)
 	if err != nil {
 		fmt.Printf("sourceFile.Read failed: %s\n", err)

@@ -2,7 +2,7 @@
 
 cd cmd/mygit
 # ファイル作成
-go run -buildvcs=false . hash-object -w ../../README.md | pbcopy
+go run -buildvcs=false . hash-object -w ./main.go | pbcopy
 echo $(pbpaste)
 
 # cat-file実行
