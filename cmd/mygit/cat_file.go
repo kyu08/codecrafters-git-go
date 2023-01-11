@@ -59,7 +59,7 @@ func unzip(b []byte) (string, error) {
 	}
 
 	buf, err := ioutil.ReadAll(r)
-	if err != nil && err != io.ErrUnexpectedEOF {
+	if err != nil {
 		return "", err
 	}
 
