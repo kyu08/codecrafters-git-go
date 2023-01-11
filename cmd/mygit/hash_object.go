@@ -77,6 +77,7 @@ func someFunc1(sourceFilePath string) string {
 	}
 
 	// ↑と↓まとめれたりする？
+	// zwの圧縮 & 書き込み周りがおかしそうなので修正する
 	if count, err = f.Write(buf.Bytes()); err != nil {
 		fmt.Printf("f.Write failed. err:%s", err)
 		os.Exit(1)
