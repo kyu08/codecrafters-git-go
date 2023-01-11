@@ -40,9 +40,6 @@ func someFunc1(sourceFilePath string) string {
 	}
 
 	contentStr := string(contentByte[:count])
-	// https://github.com/go-git/go-git/blob/5dabd83e3712e2554745c736b55df405a0ba4f33/plumbing/object.go#L93 でErrInvalidTypeが返るパターンがある。
-	// ちゃんとヘッダーに"blob"って挿入できてない可能性があるかも
-	// というかヘッダー自体挿入できているか怪しい
 	header := fmt.Sprintf("blob %d\x00", len(contentStr))
 	store := header + contentStr
 
@@ -72,9 +69,7 @@ func someFunc1(sourceFilePath string) string {
 
 	var buf bytes.Buffer
 	zw := zlib.NewWriter(&buf)
-	// storeを[]byteにしたやつを渡す
 	zw.Write([]byte(store))
-	// zw.Write(contentByte[:count])
 	zw.Close()
 
 	if count, err = f.Write(buf.Bytes()); err != nil {
