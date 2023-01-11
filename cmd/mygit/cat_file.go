@@ -32,7 +32,6 @@ func catFile(opt, optValue *string) {
 			os.Exit(1)
 		}
 
-		fmt.Printf("👺\n")
 		// ファイル内容を解凍
 		result, err := unzip(b)
 		if err != nil {
@@ -40,7 +39,8 @@ func catFile(opt, optValue *string) {
 			os.Exit(1)
 		}
 
-		fmt.Printf(result)
+		fmt.Printf("%q", result)
+		// fmt.Printf(result)
 	}
 }
 
