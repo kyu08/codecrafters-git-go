@@ -13,6 +13,8 @@ import (
 func catFile(opt, optValue *string) {
 	switch *opt {
 	case "-p":
+		fmt.Print("[START] catFile\n")
+		defer fmt.Print("[END] catFile\n")
 		const hashLen = 40
 
 		if optValue == nil {
@@ -25,6 +27,7 @@ func catFile(opt, optValue *string) {
 			panic("invalid hash format.")
 		}
 		filePath := fmt.Sprintf(".git/objects/%s/%s", blobHash[:2], blobHash[2:])
+		fmt.Print("generate filePath\n")
 
 		// ファイル内容を取得
 		b, err := ioutil.ReadFile(filePath)
@@ -32,6 +35,7 @@ func catFile(opt, optValue *string) {
 			fmt.Printf("ReadFile failed: %s\n", err)
 			os.Exit(1)
 		}
+		fmt.Print("ReadFile\n")
 
 		// ファイル内容を解凍
 		result, err := unzip(b)
@@ -39,6 +43,7 @@ func catFile(opt, optValue *string) {
 			fmt.Printf("unzipLines failed: %s\n", err)
 			os.Exit(1)
 		}
+		fmt.Print("Unzip\n")
 
 		fmt.Printf(result)
 	}
