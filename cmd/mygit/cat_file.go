@@ -39,8 +39,7 @@ func catFile(opt, optValue *string) {
 			os.Exit(1)
 		}
 
-		fmt.Printf("%q", result)
-		// fmt.Printf(result)
+		fmt.Printf(result)
 	}
 }
 
