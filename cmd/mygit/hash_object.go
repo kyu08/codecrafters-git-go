@@ -69,15 +69,19 @@ func someFunc1(sourceFilePath string) string {
 
 	var buf bytes.Buffer
 	zw := zlib.NewWriter(&buf)
-	defer zw.Close()
+	zw.Write(contentByte[:count])
+	zw.Close()
+	// fmt.Printf("buf.Bytes(): %v\n", buf.Bytes())
+	// fmt.Printf("string buf.Bytes(): %v\n", string(buf.Bytes()))
 
-	if _, err = zw.Write(contentByte[:count]); err != nil {
-		fmt.Printf("zw.Write failed. err:%s", err)
-		os.Exit(1)
-	}
+	// defer zw.Close()
+
+	// if _, err = zw.Write(contentByte[:count]); err != nil {
+	// 	fmt.Printf("zw.Write failed. err:%s", err)
+	// 	os.Exit(1)
+	// }
 
 	// ↑と↓まとめれたりする？
-	// zwの圧縮 & 書き込み周りがおかしそうなので修正する
 	if count, err = f.Write(buf.Bytes()); err != nil {
 		fmt.Printf("f.Write failed. err:%s", err)
 		os.Exit(1)
