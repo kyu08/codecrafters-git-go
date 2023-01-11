@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"compress/zlib"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"strings"
