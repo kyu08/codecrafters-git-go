@@ -71,17 +71,7 @@ func someFunc1(sourceFilePath string) string {
 	zw := zlib.NewWriter(&buf)
 	zw.Write(contentByte[:count])
 	zw.Close()
-	// fmt.Printf("buf.Bytes(): %v\n", buf.Bytes())
-	// fmt.Printf("string buf.Bytes(): %v\n", string(buf.Bytes()))
 
-	// defer zw.Close()
-
-	// if _, err = zw.Write(contentByte[:count]); err != nil {
-	// 	fmt.Printf("zw.Write failed. err:%s", err)
-	// 	os.Exit(1)
-	// }
-
-	// ↑と↓まとめれたりする？
 	if count, err = f.Write(buf.Bytes()); err != nil {
 		fmt.Printf("f.Write failed. err:%s", err)
 		os.Exit(1)
