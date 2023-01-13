@@ -17,13 +17,14 @@ func hashObject(opt, optValue *string) {
 		}
 
 		// TODO: hashString取得メソッドを別定義する
-		hash := someFunc1(*optValue)
-		outputHash(hash)
+		store := getStore(*optValue)
+		hash := getHash(store)
+		saveBlob(store, hash)
+		printHash(hash)
 	}
 }
 
-// someFunc1 データをblobとして.git/objectsに格納
-func someFunc1(sourceFilePath string) string {
+func getStore(sourceFilePath string) string {
 	// ファイル内容の取得
 	sourceFile, err := os.Open(sourceFilePath)
 	defer sourceFile.Close()
@@ -32,6 +33,7 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
+	// ファイル内容の読み出し
 	contentByte := make([]byte, 1024)
 	count, err := sourceFile.Read(contentByte)
 	if err != nil {
@@ -39,21 +41,26 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
+	// headerを計算
 	contentStr := string(contentByte[:count])
 	header := fmt.Sprintf("blob %d\x00", len(contentStr))
-	store := header + contentStr
 
-	// sha1を計算
+	return header + contentStr
+}
+
+func getHash(store string) string {
 	h := sha1.New()
 	h.Write([]byte(store))
 	bs := h.Sum(nil)
-	hash := fmt.Sprintf("%x", bs)
-	dirName := hash[:2]
-	fileName := hash[2:]
 
+	return fmt.Sprintf("%x", bs)
+}
+
+// saveBlob データをblobとして.git/objectsに格納
+func saveBlob(store, hash string) {
 	// file contentの圧縮
-	dirPath := fmt.Sprintf(".git/objects/%s", dirName)
-	blobFilePath := fmt.Sprintf("%s/%s", dirPath, fileName)
+	dirPath := fmt.Sprintf(".git/objects/%s", hash[:2])
+	blobFilePath := fmt.Sprintf("%s/%s", dirPath, hash[2:])
 
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
 		fmt.Printf("os.MkdirAll failed. err:%s", err)
@@ -67,20 +74,20 @@ func someFunc1(sourceFilePath string) string {
 		os.Exit(1)
 	}
 
+	// 圧縮
 	var buf bytes.Buffer
 	zw := zlib.NewWriter(&buf)
 	zw.Write([]byte(store))
 	zw.Close()
 
-	if count, err = f.Write(buf.Bytes()); err != nil {
+	// .git/objects以下にファイル書き込み
+	if _, err := f.Write(buf.Bytes()); err != nil {
 		fmt.Printf("f.Write failed. err:%s", err)
 		os.Exit(1)
 	}
-
-	return hash
 }
 
-// outputHash SHAをstdoutに出力
-func outputHash(sha string) {
+// printHash SHAをstdoutに出力
+func printHash(sha string) {
 	fmt.Print(sha)
 }
