@@ -18,7 +18,7 @@ func hashObject(opt, optValue *string) {
 
 		// TODO: hashString取得メソッドを別定義する
 		hash := someFunc1(*optValue)
-		someFunc2(hash)
+		outputHash(hash)
 	}
 }
 
@@ -80,7 +80,7 @@ func someFunc1(sourceFilePath string) string {
 	return hash
 }
 
-// someFunc2 SHAをstdoutに出力
-func someFunc2(sha string) {
+// outputHash SHAをstdoutに出力
+func outputHash(sha string) {
 	fmt.Print(sha)
 }
