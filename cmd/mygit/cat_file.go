@@ -40,6 +40,10 @@ func catFile(opt, optValue *string) {
 		}
 
 		fmt.Printf(result)
+
+	default:
+		fmt.Fprintf(os.Stderr, "Invalid option %s\n", *opt)
+		os.Exit(1)
 	}
 }
 

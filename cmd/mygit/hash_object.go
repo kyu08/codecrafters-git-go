@@ -16,11 +16,13 @@ func hashObject(opt, optValue *string) {
 			os.Exit(1)
 		}
 
-		// TODO: hashString取得メソッドを別定義する
 		store := getStore(*optValue)
 		hash := getHash(store)
 		saveBlob(store, hash)
 		printHash(hash)
+	default:
+		fmt.Fprintf(os.Stderr, "Invalid option %s\n", *opt)
+		os.Exit(1)
 	}
 }
 
