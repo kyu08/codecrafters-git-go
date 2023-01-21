@@ -1,4 +1,4 @@
-package main
+package plumbing
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func hashObject(opt, optValue *string) {
+func HashObject(opt, optValue *string) {
 	switch *opt {
 	case "-w":
 		if optValue == nil {

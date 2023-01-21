@@ -1,11 +1,11 @@
-package main
+package plumbing
 
 import (
 	"fmt"
 	"os"
 )
 
-func gitInit() {
+func GitInit() {
 	for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 		// MEMO: 0755: rwxr-xr-x
 		if err := os.MkdirAll(dir, 0755); err != nil {

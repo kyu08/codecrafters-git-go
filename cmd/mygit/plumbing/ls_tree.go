@@ -1,4 +1,4 @@
-package main
+package plumbing
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func lsTree(opt, optValue *string) {
+func LsTree(opt, optValue *string) {
 	switch *opt {
 	case "--name-only":
 		// tree-shaをファイルパスに変換
@@ -20,6 +20,7 @@ func lsTree(opt, optValue *string) {
 			os.Exit(1)
 		}
 
+		// 解凍
 		fmt.Printf("string(b): %v\n", string(b))
 
 		// treeオブジェクトのファイル内容を取得

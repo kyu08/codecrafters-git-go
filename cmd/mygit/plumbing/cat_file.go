@@ -1,4 +1,4 @@
-package main
+package plumbing
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func catFile(opt, optValue *string) {
+func CatFile(opt, optValue *string) {
 	switch *opt {
 	case "-p":
 		const hashLen = 40
@@ -47,7 +47,7 @@ func catFile(opt, optValue *string) {
 	}
 }
 
-func getElem(args []string, index int64) *string {
+func GetElem(args []string, index int64) *string {
 	if int64(len(args)) >= (index + 1) {
 		return &args[index]
 	}
@@ -55,6 +55,7 @@ func getElem(args []string, index int64) *string {
 	return nil
 }
 
+// パッケージ切る?
 func unzip(b []byte) (string, error) {
 	r, err := zlib.NewReader(bytes.NewReader(b))
 	if err != nil {
