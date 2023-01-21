@@ -9,6 +9,7 @@ func lsTree(opt, optValue *string) {
 	switch *opt {
 	case "--name-only":
 		fmt.Fprintf(os.Stderr, "sha: %s\n", *optValue)
+		fmt.Printf("optValue: %v\n", optValue)
 		// tree-shaをファイルパスに変換
 		// treeオブジェクトのファイル内容を取得
 		// blobならファイル名をtreeなら再帰で処理
