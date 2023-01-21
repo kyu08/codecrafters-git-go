@@ -1,12 +1,11 @@
-package plumbing
+package usecase
 
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 )
 
-func LsTree(opt, optValue *string) {
+func LsTree(opt, optValue *string) error {
 	switch *opt {
 	case "--name-only":
 		// tree-shaをファイルパスに変換
@@ -16,8 +15,7 @@ func LsTree(opt, optValue *string) {
 		// ファイル内容を取得
 		b, err := ioutil.ReadFile(filePath)
 		if err != nil {
-			fmt.Printf("ReadFile failed: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("ReadFile failed: %w", err)
 		}
 
 		// 解凍
@@ -27,8 +25,8 @@ func LsTree(opt, optValue *string) {
 		// blobならファイル名をtreeなら再帰で処理
 		// アルファベット順にソート
 		// 標準出力に出力
+		return nil
 	default:
-		fmt.Fprintf(os.Stderr, "Invalid option %s\n", *opt)
-		os.Exit(1)
+		return fmt.Errorf("Invalid option %s", *opt)
 	}
 }

@@ -1,60 +1,49 @@
-package plumbing
+package usecase
 
 import (
 	"bytes"
 	"compress/zlib"
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"strings"
 )
 
-func CatFile(opt, optValue *string) {
+func CatFile(opt, optValue *string) error {
 	switch *opt {
 	case "-p":
 		const hashLen = 40
 
 		if optValue == nil {
-			panic("optValue not given.")
+			return errors.New("optValue not given.")
 		}
 
 		// hashをファイルパスに変換
 		blobHash := *optValue
 		if len(blobHash) != hashLen {
-			panic("invalid hash format.")
+			return errors.New("invalid hash format.")
 		}
 		filePath := fmt.Sprintf(".git/objects/%s/%s", blobHash[:2], blobHash[2:])
 
 		// ファイル内容を取得
 		b, err := ioutil.ReadFile(filePath)
 		if err != nil {
-			fmt.Printf("ReadFile failed: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("fail: read file: %w", err)
 		}
 
-		// ファイル内容を解凍
 		result, err := unzip(b)
 		if err != nil {
-			fmt.Printf("unzipLines failed: %s\n", err)
-			os.Exit(1)
+			return fmt.Errorf("fail: unzipLines: %w", err)
 		}
 
 		fmt.Printf(result)
-
+		return nil
 	default:
-		fmt.Fprintf(os.Stderr, "Invalid option %s\n", *opt)
-		os.Exit(1)
+		return fmt.Errorf("invalid option: %s", *opt)
 	}
 }
 
-func GetElem(args []string, index int64) *string {
-	if int64(len(args)) >= (index + 1) {
-		return &args[index]
-	}
-
-	return nil
-}
-
+// zlibで圧縮されたバイト列を解凍
 func unzip(b []byte) (string, error) {
 	r, err := zlib.NewReader(bytes.NewReader(b))
 	if err != nil {

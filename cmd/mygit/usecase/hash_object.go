@@ -1,53 +1,59 @@
-package plumbing
+package usecase
 
 import (
 	"bytes"
 	"compress/zlib"
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	"os"
 )
 
-func HashObject(opt, optValue *string) {
+func HashObject(opt, optValue *string) error {
 	switch *opt {
 	case "-w":
 		if optValue == nil {
-			fmt.Print("file name is empty")
-			os.Exit(1)
+			return errors.New("file name is empty")
 		}
 
-		store := getStore(*optValue)
+		store, err := getStore(*optValue)
+		if err != nil {
+			return err
+		}
+
 		hash := getHash(store)
-		saveBlob(store, hash)
-		printHash(hash)
+		if err = saveBlob(store, hash); err != nil {
+			return err
+		}
+
+		fmt.Print(hash)
+		return nil
 	default:
-		fmt.Fprintf(os.Stderr, "Invalid option %s\n", *opt)
-		os.Exit(1)
+		return fmt.Errorf("invalid option: %s", *opt)
 	}
 }
 
-func getStore(sourceFilePath string) string {
+func getStore(sourceFilePath string) (string, error) {
 	// ファイル内容の取得
 	sourceFile, err := os.Open(sourceFilePath)
 	defer sourceFile.Close()
 	if err != nil {
-		fmt.Printf("os.Open failed: %s\n", err)
-		os.Exit(1)
+		return "", fmt.Errorf("os.Open failed: %w", err)
 	}
 
 	// ファイル内容の読み出し
 	contentByte := make([]byte, 1024)
 	count, err := sourceFile.Read(contentByte)
 	if err != nil {
-		fmt.Printf("sourceFile.Read failed: %s\n", err)
-		os.Exit(1)
+		return "", fmt.Errorf("sourceFile.Read failed: %w", err)
+
 	}
 
 	// headerを計算
 	contentStr := string(contentByte[:count])
 	header := fmt.Sprintf("blob %d\x00", len(contentStr))
 
-	return header + contentStr
+	return header + contentStr, nil
 }
 
 func getHash(store string) string {
@@ -58,22 +64,22 @@ func getHash(store string) string {
 	return fmt.Sprintf("%x", bs)
 }
 
-// saveBlob データをblobとして.git/objectsに格納
-func saveBlob(store, hash string) {
+// saveBlob blobデータを圧縮して.git/objectsに格納
+// TODO: 責務が大きすぎるので分割する
+func saveBlob(store, hash string) error {
 	// file contentの圧縮
 	dirPath := fmt.Sprintf(".git/objects/%s", hash[:2])
 	blobFilePath := fmt.Sprintf("%s/%s", dirPath, hash[2:])
 
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
-		fmt.Printf("os.MkdirAll failed. err:%s", err)
-		os.Exit(1)
+		return fmt.Errorf("os.MkdirAll failed. err:%w", err)
+
 	}
 
 	f, err := os.Create(blobFilePath)
 	defer f.Close()
 	if err != nil {
-		fmt.Printf("os.Create failed. err:%s", err)
-		os.Exit(1)
+		return fmt.Errorf("os.Create failed. err:%w", err)
 	}
 
 	// 圧縮
@@ -84,12 +90,8 @@ func saveBlob(store, hash string) {
 
 	// .git/objects以下にファイル書き込み
 	if _, err := f.Write(buf.Bytes()); err != nil {
-		fmt.Printf("f.Write failed. err:%s", err)
-		os.Exit(1)
+		return fmt.Errorf("f.Write failed. err:%w", err)
 	}
-}
 
-// printHash SHAをstdoutに出力
-func printHash(sha string) {
-	fmt.Print(sha)
+	return nil
 }
