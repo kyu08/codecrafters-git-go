@@ -19,7 +19,7 @@ func Handler(args []string) {
 
 	switch command {
 	case "init":
-		plumbing.GitInit()
+		plumbing.Init()
 	case "cat-file":
 		plumbing.CatFile(opt, optValue)
 	case "hash-object":

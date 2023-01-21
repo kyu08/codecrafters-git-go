@@ -5,9 +5,9 @@ import (
 	"os"
 )
 
-func GitInit() {
+func Init() {
 	for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
-		// MEMO: 0755: rwxr-xr-x
+		// 0755: rwxr-xr-x
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error creating directory: %s\n", err)
 		}

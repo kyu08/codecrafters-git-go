@@ -55,7 +55,6 @@ func GetElem(args []string, index int64) *string {
 	return nil
 }
 
-// パッケージ切る?
 func unzip(b []byte) (string, error) {
 	r, err := zlib.NewReader(bytes.NewReader(b))
 	if err != nil {
