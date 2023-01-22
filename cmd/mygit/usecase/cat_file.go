@@ -9,38 +9,33 @@ import (
 	"strings"
 )
 
-func CatFile(opt, optValue *string) error {
-	switch *opt {
-	case "-p":
-		const hashLen = 40
-
-		if optValue == nil {
-			return errors.New("optValue not given.")
-		}
-
-		// hashをファイルパスに変換
-		blobHash := *optValue
-		if len(blobHash) != hashLen {
-			return errors.New("invalid hash format.")
-		}
-		filePath := fmt.Sprintf(".git/objects/%s/%s", blobHash[:2], blobHash[2:])
-
-		// ファイル内容を取得
-		b, err := ioutil.ReadFile(filePath)
-		if err != nil {
-			return fmt.Errorf("fail: read file: %w", err)
-		}
-
-		result, err := unzip(b)
-		if err != nil {
-			return fmt.Errorf("fail: unzipLines: %w", err)
-		}
-
-		fmt.Printf(result)
-		return nil
-	default:
-		return fmt.Errorf("invalid option: %s", *opt)
+func CatFile(optValue *string) error {
+	// TODO: validation用の関数を切る
+	if optValue == nil {
+		return errors.New("optValue not given.")
 	}
+	const hashLen = 40
+	blobHash := *optValue
+	if len(blobHash) != hashLen {
+		return errors.New("invalid hash format.")
+	}
+
+	// hashをファイルパスに変換
+	filePath := fmt.Sprintf(".git/objects/%s/%s", blobHash[:2], blobHash[2:])
+
+	// ファイル内容を取得
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("fail: read file: %w", err)
+	}
+
+	result, err := unzip(b)
+	if err != nil {
+		return fmt.Errorf("fail: unzipLines: %w", err)
+	}
+
+	fmt.Printf(result)
+	return nil
 }
 
 // zlibで圧縮されたバイト列を解凍
