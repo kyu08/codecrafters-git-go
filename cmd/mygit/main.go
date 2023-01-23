@@ -5,11 +5,11 @@ import (
 )
 
 func main() {
-	// TODO: コマンドライン引数の受け取りにcobraを使ってみる
-	// if err := handler.Handler(os.Args); err != nil {
-	// 	fmt.Fprintf(os.Stderr, "%s", err)
-	// }
-
+	// TODO: cobra移植やりきる
+	// あとhash-objectとls-treeだけ
+	// TODO: validationを関数に切り出す
+	// TODO: コード綺麗にする
+	// TODO: テストかく
 	cmd := handler.Command()
 	cmd.Execute()
 }
