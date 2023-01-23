@@ -1,4 +1,4 @@
-package usecase
+package handler
 
 import (
 	"testing"
@@ -34,7 +34,7 @@ func Test_getElem(t *testing.T) {
 		tt := tt
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			got := GetElem(tt.args, tt.index)
+			got := getElem(tt.args, tt.index)
 
 			if tt.want == nil {
 				if got == nil {
