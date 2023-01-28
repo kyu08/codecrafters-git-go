@@ -9,28 +9,23 @@ import (
 	"os"
 )
 
-func HashObject(opt, optValue *string) error {
-	switch *opt {
-	case "-w":
-		if optValue == nil {
-			return errors.New("file name is empty")
-		}
-
-		store, err := getStore(*optValue)
-		if err != nil {
-			return err
-		}
-
-		hash := getHash(store)
-		if err = saveBlob(store, hash); err != nil {
-			return err
-		}
-
-		fmt.Print(hash)
-		return nil
-	default:
-		return fmt.Errorf("invalid option: %s", *opt)
+func HashObject(optValue *string) error {
+	if optValue == nil {
+		return errors.New("file name is empty")
 	}
+
+	store, err := getStore(*optValue)
+	if err != nil {
+		return err
+	}
+
+	hash := getHash(store)
+	if err = saveBlob(store, hash); err != nil {
+		return err
+	}
+
+	fmt.Print(hash)
+	return nil
 }
 
 func getStore(sourceFilePath string) (string, error) {

@@ -29,8 +29,6 @@ func Handler(args []string) error {
 	optValue := getElem(os.Args, 3)
 
 	switch command {
-	// case "hash-object":
-	// 	return usecase.HashObject(opt, optValue)
 	case "ls-tree":
 		return usecase.LsTree(opt, optValue)
 	default:

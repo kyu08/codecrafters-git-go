@@ -5,8 +5,8 @@ import (
 )
 
 func main() {
-	// TODO: cobra移植やりきる
-	// あとhash-objectとls-treeだけ
+	// TODO: cobra移植やる
+	// ls-treeだけ
 	// TODO: validationを関数に切り出す
 	// TODO: コード綺麗にする
 	// TODO: テストかく
