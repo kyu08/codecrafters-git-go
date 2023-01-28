@@ -9,19 +9,26 @@ import (
 	"strings"
 )
 
-func CatFile(optValue *string) error {
-	// TODO: validation用の関数を切る
-	if optValue == nil {
-		return errors.New("optValue not given.")
-	}
+type CatFileParam struct {
+	hash *string
+}
+
+func (p CatFileParam) validate() error {
 	const hashLen = 40
-	blobHash := *optValue
-	if len(blobHash) != hashLen {
+
+	if len(*p.hash) != hashLen {
 		return errors.New("invalid hash format.")
+	}
+	return nil
+}
+
+func CatFile(param CatFileParam) error {
+	if err := param.validate(); err == nil {
+		return err
 	}
 
 	// hashをファイルパスに変換
-	filePath := fmt.Sprintf(".git/objects/%s/%s", blobHash[:2], blobHash[2:])
+	filePath := fmt.Sprintf(".git/objects/%s/%s", (*param.hash)[:2], (*param.hash)[2:])
 
 	// ファイル内容を取得
 	b, err := ioutil.ReadFile(filePath)
