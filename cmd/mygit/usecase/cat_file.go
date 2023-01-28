@@ -23,7 +23,7 @@ func (p CatFileParam) validate() error {
 }
 
 func CatFile(param CatFileParam) error {
-	if err := param.validate(); err == nil {
+	if err := param.validate(); err != nil {
 		return err
 	}
 
