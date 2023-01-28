@@ -13,6 +13,7 @@ func Command() *cobra.Command {
 	var rootCmd = &cobra.Command{Use: "TODO: write usage"}
 	rootCmd.AddCommand(Init())
 	rootCmd.AddCommand(CatFile())
+	rootCmd.AddCommand(HashObject())
 
 	return rootCmd
 }
@@ -28,11 +29,8 @@ func Handler(args []string) error {
 	optValue := getElem(os.Args, 3)
 
 	switch command {
-	case "hash-object":
-
-		// ↓これのcobra移植をするところから！！！！！！！！
-
-		return usecase.HashObject(opt, optValue)
+	// case "hash-object":
+	// 	return usecase.HashObject(opt, optValue)
 	case "ls-tree":
 		return usecase.LsTree(opt, optValue)
 	default:
