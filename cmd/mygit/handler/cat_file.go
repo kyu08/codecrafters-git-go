@@ -22,8 +22,8 @@ func CatFile() *cobra.Command {
 		},
 	}
 
-	const pFlagUsage = "usage: git cat-file (-t [--allow-unknown-type] | -s [--allow-unknown-type] | -e | -p | <type> | --textconv | --filters) [--path=<path>] <object>"
-	cmd.Flags().StringVarP(&hash, "p", "p", "", pFlagUsage)
+	const flagUsage = "usage: git cat-file (-t [--allow-unknown-type] | -s [--allow-unknown-type] | -e | -p | <type> | --textconv | --filters) [--path=<path>] <object>"
+	cmd.Flags().StringVarP(&hash, "p", "p", "", flagUsage)
 
 	return cmd
 }
