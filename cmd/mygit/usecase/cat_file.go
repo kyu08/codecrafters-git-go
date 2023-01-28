@@ -10,13 +10,13 @@ import (
 )
 
 type CatFileParam struct {
-	hash *string
+	Hash *string
 }
 
 func (p CatFileParam) validate() error {
 	const hashLen = 40
 
-	if len(*p.hash) != hashLen {
+	if len(*p.Hash) != hashLen {
 		return errors.New("invalid hash format.")
 	}
 	return nil
@@ -28,7 +28,7 @@ func CatFile(param CatFileParam) error {
 	}
 
 	// hashをファイルパスに変換
-	filePath := fmt.Sprintf(".git/objects/%s/%s", (*param.hash)[:2], (*param.hash)[2:])
+	filePath := fmt.Sprintf(".git/objects/%s/%s", (*param.Hash)[:2], (*param.Hash)[2:])
 
 	// ファイル内容を取得
 	b, err := ioutil.ReadFile(filePath)
