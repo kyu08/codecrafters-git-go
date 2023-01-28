@@ -1,39 +1,18 @@
 package handler
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/codecrafters-io/git-starter-go/cmd/mygit/usecase"
 	"github.com/spf13/cobra"
 )
 
+// fmt.Printで標準出力固定で出力するのではなく、fmt.Fprintfとかを使って出力先を外から渡すようにすればよりテスタブルになりそう
 func Command() *cobra.Command {
-
-	var rootCmd = &cobra.Command{Use: "TODO: write usage"}
+	var rootCmd = &cobra.Command{Use: "mygit usage"}
 	rootCmd.AddCommand(Init())
 	rootCmd.AddCommand(CatFile())
 	rootCmd.AddCommand(HashObject())
+	rootCmd.AddCommand(LSTree())
 
 	return rootCmd
-}
-
-// fmt.Printで標準出力固定で出力するのではなく、fmt.Fprintfとかを使って出力先を外から渡すようにすればよりテスタブルになりそう
-func Handler(args []string) error {
-	if len(os.Args) < 2 {
-		return fmt.Errorf("usage: mygit <command> [<args>...]")
-	}
-
-	command := os.Args[1]
-	opt := getElem(os.Args, 2)
-	optValue := getElem(os.Args, 3)
-
-	switch command {
-	case "ls-tree":
-		return usecase.LsTree(opt, optValue)
-	default:
-		return fmt.Errorf("Unknown command %s", command)
-	}
 }
 
 func getElem(args []string, index int64) *string {
