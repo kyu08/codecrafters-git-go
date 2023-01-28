@@ -22,8 +22,8 @@ func LSTree() *cobra.Command {
 		},
 	}
 
-	const pFlagUsage = "git ls-tree [-d] [-r] [-t] [-l] [-z] [--name-only] [--name-status] [--object-only] [--full-name] [--full-tree] [--abbrev[=<n>]] [--format=<format>] <tree-ish> [<path>…]"
-	cmd.Flags().StringVarP(&treeSha, "nameonly", "nameonly", "", pFlagUsage)
+	const flagUsage = "git ls-tree [-d] [-r] [-t] [-l] [-z] [--name-only] [--name-status] [--object-only] [--full-name] [--full-tree] [--abbrev[=<n>]] [--format=<format>] <tree-ish> [<path>…]"
+	cmd.Flags().StringVarP(&treeSha, "name-only", "name-only", "", flagUsage)
 
 	return cmd
 }

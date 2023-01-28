@@ -22,8 +22,8 @@ func HashObject() *cobra.Command {
 		},
 	}
 
-	const pFlagUsage = "git hash-object [-t <type>] [-w] [--path=<file> | --no-filters] [--stdin [--literally]] [--] <file>…"
-	cmd.Flags().StringVarP(&filePath, "w", "w", "", pFlagUsage)
+	const flagUsage = "git hash-object [-t <type>] [-w] [--path=<file> | --no-filters] [--stdin [--literally]] [--] <file>…"
+	cmd.Flags().StringVarP(&filePath, "w", "w", "", flagUsage)
 
 	return cmd
 }
