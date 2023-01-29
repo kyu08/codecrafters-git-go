@@ -9,12 +9,23 @@ import (
 	"os"
 )
 
-func HashObject(optValue *string) error {
-	if optValue == nil {
+type HashObjectParam struct {
+	FilePath *string
+}
+
+func (p HashObjectParam) validate() error {
+	if p.FilePath == nil {
 		return errors.New("file name is empty")
 	}
+	return nil
+}
 
-	store, err := getStore(*optValue)
+func HashObject(param HashObjectParam) error {
+	if err := param.validate(); err != nil {
+		return err
+	}
+
+	store, err := getStore(*param.FilePath)
 	if err != nil {
 		return err
 	}

@@ -6,27 +6,27 @@ import (
 	"testing"
 )
 
-func TestCatFileParamValidate(t *testing.T) {
+func TestHashObjectParamValidate(t *testing.T) {
 	t.Parallel()
 	tests := map[string]struct {
-		Hash string
-		Want error
+		FilePath *string
+		Want     error
 	}{
-		"40文字のときnilを返す": {
-			Hash: "1234567890123456789012345678901234567890",
-			Want: nil,
+		"非nilのときnilを返す": {
+			FilePath: testable.StrToPtr("/path/to/file.txt"),
+			Want:     nil,
 		},
-		"39文字のときエラーを返す": {
-			Hash: "123456789012345678901234567890123456789",
-			Want: errors.New("invalid hash format."),
+		"nilのときエラーを返す": {
+			FilePath: nil,
+			Want:     errors.New("file name is empty"),
 		},
 	}
 	for name, tt := range tests {
 		tt := tt
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
-			p := CatFileParam{
-				Hash: &tt.Hash,
+			p := HashObjectParam{
+				FilePath: tt.FilePath,
 			}
 			got := p.validate()
 			want := tt.Want
