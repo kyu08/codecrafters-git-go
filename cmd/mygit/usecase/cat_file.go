@@ -28,6 +28,7 @@ func CatFile(param CatFileParam) error {
 	}
 
 	// hashをファイルパスに変換
+	// TODO: add test?
 	filePath := fmt.Sprintf(".git/objects/%s/%s", (*param.Hash)[:2], (*param.Hash)[2:])
 
 	// ファイル内容を取得
@@ -46,6 +47,7 @@ func CatFile(param CatFileParam) error {
 }
 
 // zlibで圧縮されたバイト列を解凍
+// TODO: add test
 func unzip(b []byte) (string, error) {
 	r, err := zlib.NewReader(bytes.NewReader(b))
 	if err != nil {

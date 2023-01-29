@@ -62,6 +62,7 @@ func getStore(sourceFilePath string) (string, error) {
 	return header + contentStr, nil
 }
 
+// TODO: add test
 func getHash(store string) string {
 	h := sha1.New()
 	h.Write([]byte(store))
@@ -79,7 +80,6 @@ func saveBlob(store, hash string) error {
 
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
 		return fmt.Errorf("os.MkdirAll failed. err:%w", err)
-
 	}
 
 	f, err := os.Create(blobFilePath)
