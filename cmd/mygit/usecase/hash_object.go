@@ -6,6 +6,7 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -20,7 +21,7 @@ func (p HashObjectParam) validate() error {
 	return nil
 }
 
-func HashObject(param HashObjectParam) error {
+func HashObject(writer io.Writer, param HashObjectParam) error {
 	if err := param.validate(); err != nil {
 		return err
 	}
@@ -35,7 +36,7 @@ func HashObject(param HashObjectParam) error {
 		return err
 	}
 
-	fmt.Print(hash)
+	writer.Write([]byte(hash))
 	return nil
 }
 

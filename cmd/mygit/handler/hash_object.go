@@ -17,7 +17,7 @@ func HashObject() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			param := usecase.HashObjectParam{FilePath: &filePath}
-			if err := usecase.HashObject(param); err != nil {
+			if err := usecase.HashObject(os.Stdout, param); err != nil {
 				fmt.Fprintf(os.Stderr, "%s", err)
 			}
 		},
