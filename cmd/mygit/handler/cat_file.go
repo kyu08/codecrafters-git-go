@@ -17,7 +17,7 @@ func CatFile() *cobra.Command {
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			param := usecase.CatFileParam{Hash: &hash}
-			if err := usecase.CatFile(param); err != nil {
+			if err := usecase.CatFile(os.Stdout, param); err != nil {
 				fmt.Fprintf(os.Stderr, "%s", err)
 			}
 		},

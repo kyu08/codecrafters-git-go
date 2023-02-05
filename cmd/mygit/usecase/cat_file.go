@@ -5,6 +5,7 @@ import (
 	"compress/zlib"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"strings"
 )
@@ -22,7 +23,7 @@ func (p CatFileParam) validate() error {
 	return nil
 }
 
-func CatFile(param CatFileParam) error {
+func CatFile(write io.Writer, param CatFileParam) error {
 	if err := param.validate(); err != nil {
 		return err
 	}
@@ -42,7 +43,7 @@ func CatFile(param CatFileParam) error {
 		return fmt.Errorf("fail: unzipLines: %w", err)
 	}
 
-	fmt.Printf(result)
+	write.Write([]byte(result))
 	return nil
 }
 
