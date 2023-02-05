@@ -2,10 +2,11 @@ package usecase
 
 import (
 	"fmt"
+	"io"
 	"os"
 )
 
-func Init() error {
+func Init(writer io.Writer) error {
 	for _, dir := range []string{".git", ".git/objects", ".git/refs"} {
 		// 0755: rwxr-xr-x
 		if err := os.MkdirAll(dir, 0755); err != nil {
@@ -18,6 +19,6 @@ func Init() error {
 		return fmt.Errorf("fail: write file: %w", err)
 	}
 
-	fmt.Println("Initialized git directory")
+	writer.Write([]byte("Initialized git directory"))
 	return nil
 }

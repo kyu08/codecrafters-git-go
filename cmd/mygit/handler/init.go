@@ -15,7 +15,7 @@ func Init() *cobra.Command {
 		Long:  "init",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := usecase.Init(); err != nil {
+			if err := usecase.Init(os.Stdout); err != nil {
 				fmt.Fprintf(os.Stderr, "%s", err)
 			}
 		},
