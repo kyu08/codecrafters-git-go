@@ -16,7 +16,7 @@ func LSTree() *cobra.Command {
 		Long:  "ls-tree",
 		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := usecase.LSTree(&treeSha); err != nil {
+			if err := usecase.LSTree(os.Stdout, &treeSha); err != nil {
 				fmt.Fprintf(os.Stderr, "%s", err)
 			}
 		},

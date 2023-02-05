@@ -2,10 +2,11 @@ package usecase
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 )
 
-func LSTree(treeSha *string) error {
+func LSTree(writer io.Writer, treeSha *string) error {
 	// tree-shaをファイルパスに変換
 	filePath := fmt.Sprintf(".git/objects/%s/%s", (*treeSha)[:2], (*treeSha)[2:])
 
